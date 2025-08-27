@@ -21,7 +21,9 @@ alpha["Year(s)"]=alpha["Year(s)"].str.replace("â","-")
 
 alpha[["Artist","Tour title"]] = alpha[["Artist","Tour title"]].apply(lambda col: col.str.replace(r'[^A-Za-z\s]', '', regex=True))
 
-print(alpha[["Artist","Tour title"]])
+alpha["Year(s)"] = alpha["Year(s)"].astype(str).str.rjust(12)
+
+print(alpha[["Artist","Tour title","Year(s)"]])
 #print(alpha["Actual gross"])
 #print(alpha)
 #print(alpha)
