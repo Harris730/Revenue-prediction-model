@@ -19,9 +19,9 @@ alpha["Ref."]=alpha["Ref."].str.split("[").str[1].str.replace("]","")
 alpha["Tour title"]=alpha["Tour title"].str.split("[").str[0].str.replace("]","")
 alpha["Year(s)"]=alpha["Year(s)"].str.replace("â","-")
 
-alpha["Artist"] = alpha["Artist"].str.extract(r'([A-Za-z]+)', expand=False)
+alpha[["Artist","Tour title"]] = alpha[["Artist","Tour title"]].apply(lambda col: col.str.replace(r'[^A-Za-z\s]', '', regex=True))
 
-print(alpha["Artist"])
+print(alpha[["Artist","Tour title"]])
 #print(alpha["Actual gross"])
 #print(alpha)
 #print(alpha)
