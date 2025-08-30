@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler,MinMaxScaler
 
 def cleanfile():
     alpha=pd.read_csv("my_file.csv",encoding="ISO-8859-1")
@@ -35,9 +35,23 @@ def cleanfile():
 def encoding():
   pd.set_option("display.max_columns", None)
   df_cod=pd.read_csv("cleaned_data.csv")
-  label=pd.get_dummies(df_cod,columns=["Artist"],dtype=int)
-  scaler=StandardScaler()
-  print(label)
+  # label=pd.get_dummies(df_cod,columns=["Artist"],dtype=int)
+
+  # scaler=StandardScaler()
+  # X_scale=scaler.fit_transform()
+
+  # scaler=MinMaxScaler()
+  # X_scale=scaler.fit_transform()
+
+#  print(df_cod["Ref."])
+
+  mean_x=df_cod["Ref."].mean()
+  deviation=(df_cod["Ref."]-mean_x)**2
+  Standard=(deviation.sum()/len(df_cod["Ref."]))**0.5 #standard deviation
+  print("Deviation:",Standard)
+
+  z_factor=(df_cod["Ref."]-mean_x)/Standard #zfactor
+  print("zfactor : \n",z_factor)
 
 
 if __name__ == "__main__": 
