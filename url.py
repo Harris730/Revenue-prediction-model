@@ -1,5 +1,5 @@
 import pandas as pd
-#from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
 
 def cleanfile():
     alpha=pd.read_csv("my_file.csv",encoding="ISO-8859-1")
@@ -36,7 +36,7 @@ def encoding():
   pd.set_option("display.max_columns", None)
   df_cod=pd.read_csv("cleaned_data.csv")
   label=pd.get_dummies(df_cod,columns=["Artist"],dtype=int)
-
+  scaler=StandardScaler()
   print(label)
 
 
