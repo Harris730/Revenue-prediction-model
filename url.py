@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
-
+from sklearn.model_selection import train_test_split
 def cleanfile():
     alpha=pd.read_csv("my_file.csv",encoding="ISO-8859-1")
 
@@ -14,7 +14,7 @@ def cleanfile():
     alpha["All Time Peak"]=alpha["All Time Peak"].fillna(alpha["All Time Peak"].mean())##
     alpha["All Time Peak"] = alpha["All Time Peak"].round().astype(int) ##
 
-    alpha["Ref."]=alpha["Ref."].str.split("[").str[1].str.replace("]","") #just using value inside brackets
+    alpha["Ref."]=alpha["Ref."].str.split("[").str[1].str.replace("]","").astype(int) #just using value inside brackets
 
     alpha["Actualgross"]=alpha["Actualgross"].str.split("[").str[0].str.replace("]","") #removing index with brackets
     alpha["Actualgross"] = alpha["Actualgross"].replace('[\\$,]', '', regex=True).astype(float) #removing $ and , from data and convert to float
@@ -31,30 +31,51 @@ def cleanfile():
     print(alpha)
     alpha.to_csv("cleaned_data.csv", index=False, encoding="utf-8-sig")
 
-
+def Z_factor(col):
+    mean_x=col.mean()
+    deviation=(col-mean_x)**2
+    Standard=(deviation.sum()/len(col))**0.5 #standard deviation
+    z_factor=(col-mean_x)/Standard #zfactor
+    print("zfactor : \n",z_factor)
+    minmax= (col-col.min())/(col.max()-col.min())
+    print("Minmax :",minmax)
+  
 def encoding():
   pd.set_option("display.max_columns", None)
-  df_cod=pd.read_csv("cleaned_data.csv")
+  cod=pd.read_csv("cleaned_data.csv")
   # label=pd.get_dummies(df_cod,columns=["Artist"],dtype=int)
+  
+  # cod={
+  #   'hours':[1,2,3,4,5],
+  #   'score':[40,50,60,70,80]
+  #  }
+  df = pd.DataFrame(cod)
+# Standard Scaler
+  stanscaler = StandardScaler()
+  s_scaler = stanscaler.fit_transform(df[["Peak","Ref."]])
+  print(pd.DataFrame(s_scaler, columns=["Peak","Ref."]))
 
-  # scaler=StandardScaler()
-  # X_scale=scaler.fit_transform()
+  # # Min-Max Scaler
+  minscaler = MinMaxScaler()
+  m_scaler = minscaler.fit_transform(df[["Peak","Ref."]])
+  print(pd.DataFrame(m_scaler, columns=["Peak","Ref."]))
 
-  # scaler=MinMaxScaler()
-  # X_scale=scaler.fit_transform()
+ 
+  X = df[["Peak"]]         
+  y = df[["Ref."]]    
 
+ 
+  x_train, x_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42)
+  print("x_train:\n", x_train)
+  print("x_test:\n", x_test)
+  print("y_train:\n", y_train)
+  print("y_test:\n", y_test)
 #  print(df_cod["Ref."])
 
-  mean_x=df_cod["Ref."].mean()
-  deviation=(df_cod["Ref."]-mean_x)**2
-  Standard=(deviation.sum()/len(df_cod["Ref."]))**0.5 #standard deviation
-  print("Deviation:",Standard)
-
-  z_factor=(df_cod["Ref."]-mean_x)/Standard #zfactor
-  print("zfactor : \n",z_factor)
-
+ 
 
 if __name__ == "__main__": 
  encoding()
+# cleanfile()
 
 
