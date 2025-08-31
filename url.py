@@ -1,6 +1,8 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
 def cleanfile():
     alpha=pd.read_csv("my_file.csv",encoding="ISO-8859-1")
 
@@ -40,11 +42,9 @@ def Z_factor(col):
     minmax= (col-col.min())/(col.max()-col.min())
     print("Minmax :",minmax)
   
-def encoding():
+def scaling():
   pd.set_option("display.max_columns", None)
-  cod=pd.read_csv("cleaned_data.csv")
-  # label=pd.get_dummies(df_cod,columns=["Artist"],dtype=int)
-  
+  cod=pd.read_csv("cleaned_data.csv") 
   # cod={
   #   'hours':[1,2,3,4,5],
   #   'score':[40,50,60,70,80]
@@ -54,28 +54,33 @@ def encoding():
   stanscaler = StandardScaler()
   s_scaler = stanscaler.fit_transform(df[["Peak","Ref."]])
   print(pd.DataFrame(s_scaler, columns=["Peak","Ref."]))
-
-  # # Min-Max Scaler
+# Min-Max Scaler
   minscaler = MinMaxScaler()
   m_scaler = minscaler.fit_transform(df[["Peak","Ref."]])
   print(pd.DataFrame(m_scaler, columns=["Peak","Ref."]))
 
- 
   X = df[["Peak"]]         
   y = df[["Ref."]]    
-
- 
   x_train, x_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42)
   print("x_train:\n", x_train)
   print("x_test:\n", x_test)
   print("y_train:\n", y_train)
   print("y_test:\n", y_test)
-#  print(df_cod["Ref."])
 
- 
+
+def regressio():
+    model = LinearRegression()
+    X=[[1],[2],[3],[4],[5]]
+    Y=[40,50,60,70,80]
+    model.fit(X,Y)
+    hours= float(input("Enter hours : "))
+    predict_marks= model.predict([[hours]])
+    print(f"You enter {hours} so your scored will be {predict_marks}")
+   # print("Helo")
 
 if __name__ == "__main__": 
- encoding()
+# encoding()
+   regressio()
 # cleanfile()
 
 
