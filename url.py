@@ -69,13 +69,16 @@ def scaling():
 
 
 def regressio():
+  
+    cod=pd.read_csv("cleaned_data.csv") 
+    print(cod[["Average gross","Shows"]])
     model = LinearRegression()
-    X=[[1],[2],[3],[4],[5]]
-    Y=[40,50,60,70,80]
+    X=cod[["Shows"]]
+    Y=cod["Average gross"]
     model.fit(X,Y)
-    hours= float(input("Enter hours : "))
-    predict_marks= model.predict([[hours]])
-    print(f"You enter {hours} so your scored will be {predict_marks}")
+    show= float(input("Enter Shows : "))
+    predict_gross= model.predict([[show]])
+    print(f"You enter {show} so your Gross will be {predict_gross}")
    # print("Helo")
 
 if __name__ == "__main__": 
