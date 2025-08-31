@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 
 def cleanfile():
     alpha=pd.read_csv("my_file.csv",encoding="ISO-8859-1")
@@ -71,15 +72,25 @@ def scaling():
 def regressio():
   
     cod=pd.read_csv("cleaned_data.csv") 
-    print(cod[["Average gross","Shows"]])
+   # print(cod[["Average gross","Shows"]])
     model = LinearRegression()
-    X=cod[["Shows"]]
-    Y=cod["Average gross"]
+    Y=cod[["Shows"]]
+    X=cod["Average gross"]
     model.fit(X,Y)
     show= float(input("Enter Shows : "))
     predict_gross= model.predict([[show]])
     print(f"You enter {show} so your Gross will be {predict_gross}")
-   # print("Helo")
+   
+
+def visualization():
+    cod=pd.read_csv("cleaned_data.csv")
+    Y=cod["Shows"]
+    X=cod["Average gross"]
+    plt.scatter(X, Y, color="blue", marker="o")
+    plt.xlabel("Shows")
+    plt.ylabel("Average Gross")
+    plt.plot()
+    plt.show()
 
 if __name__ == "__main__": 
 # encoding()
