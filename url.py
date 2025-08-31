@@ -3,6 +3,7 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,confusion_matrix
 
 def cleanfile():
     alpha=pd.read_csv("my_file.csv",encoding="ISO-8859-1")
@@ -68,8 +69,7 @@ def scaling():
   print("y_train:\n", y_train)
   print("y_test:\n", y_test)
 
-
-def regressio():
+def regression():
   
     cod=pd.read_csv("cleaned_data.csv") 
    # print(cod[["Average gross","Shows"]])
@@ -81,7 +81,6 @@ def regressio():
     predict_gross= model.predict([[show]])
     print(f"You enter {show} so your Gross will be {predict_gross}")
    
-
 def visualization():
     cod=pd.read_csv("cleaned_data.csv")
     Y=cod["Shows"]
@@ -92,9 +91,16 @@ def visualization():
     plt.plot()
     plt.show()
 
+def confus_metrics():
+    y_true=[1,0,0,1,1,0,0,1,1,1]
+    y_pred=[1,0,1,0,0,1,0,1,1,0]
+    cm=confusion_matrix(y_true,y_pred)
+    print(cm)
+
 if __name__ == "__main__": 
+    confus_metrics()
 # encoding()
-   regressio()
+# regressio()
 # cleanfile()
 
 
