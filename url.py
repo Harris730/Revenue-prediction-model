@@ -121,6 +121,7 @@ if __name__ == "__main__":
     plt.plot(X,predicted_gross,color="red",label="line")
     plt.grid(True)
     plt.show()
+    alpha=5+5
     # #new_pred=model.predict([[400]])
     #print("predicted gross :",new_pred)
 
