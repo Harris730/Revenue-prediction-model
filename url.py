@@ -1,9 +1,11 @@
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,confusion_matrix
+from sklearn.metrics import mean_absolute_error,mean_squared_error,r2_score
 
 def cleanfile():
     alpha=pd.read_csv("my_file.csv",encoding="ISO-8859-1")
@@ -98,9 +100,28 @@ def confus_metrics():
     print(cm)
 
 if __name__ == "__main__": 
-    confus_metrics()
-# encoding()
-# regressio()
-# cleanfile()
+    cod=pd.read_csv("cleaned_data.csv")
+    X=cod[["Shows"]]
+    Y=cod["Average gross"]
+    model=LinearRegression()
+    model.fit(X,Y)
+    predicted_gross=model.predict(X)
+    mae=mean_squared_error(Y,predicted_gross)
+    mse=mean_squared_error(Y,predicted_gross)
+    rmse=np.sqrt(mse)
+    r2=r2_score(Y,predicted_gross)
+
+    print("MAE:",round(mae,2))
+    print("MSE:",round(mse,2))
+    print("RMSE:",round(rmse,2))
+    print("R2:",round(r2,2))
+    plt.figure(figsize=(10,6))
+    plt.scatter(X,Y,color="blue",label="Actual score")
+    plt.plot(X,predicted_gross,color="red",label="line")
+    plt.grid(True)
+    plt.show()
+    #new_pred=model.predict([[400]])
+    #print("predicted gross :",new_pred)
+
 
 
