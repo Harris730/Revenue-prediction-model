@@ -34,8 +34,8 @@ def cleanfile():
 
     alpha["Year(s)"]=alpha["Year(s)"].str.replace("â","-") # replacing junks with -
 
-    print(alpha)
-    alpha.to_csv("cleaned_data.csv", index=False, encoding="utf-8-sig")
+    #print(alpha)
+    alpha.to_csv("real_data.csv", index=False, encoding="utf-8-sig")
 
 def Z_factor(col):
     mean_x=col.mean()
@@ -100,7 +100,8 @@ def confus_metrics():
     print(cm)
 
 if __name__ == "__main__": 
-    cod=pd.read_csv("cleaned_data.csv")
+    
+    cod=pd.read_csv("expanded_data.csv")
     X=cod[["Shows"]]
     Y=cod["Average gross"]
     model=LinearRegression()
@@ -120,7 +121,7 @@ if __name__ == "__main__":
     plt.plot(X,predicted_gross,color="red",label="line")
     plt.grid(True)
     plt.show()
-    #new_pred=model.predict([[400]])
+    # #new_pred=model.predict([[400]])
     #print("predicted gross :",new_pred)
 
 
