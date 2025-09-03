@@ -43,8 +43,9 @@ def Z_factor(col):
     Standard=(deviation.sum()/len(col))**0.5 #standard deviation
     z_factor=(col-mean_x)/Standard #zfactor
     print("zfactor : \n",z_factor)
-    minmax= (col-col.min())/(col.max()-col.min())
-    print("Minmax :",minmax)
+    return z_factor
+   # minmax= (col-col.min())/(col.max()-col.min())
+  #print("Minmax :",minmax)
   
 def scaling():
   pd.set_option("display.max_columns", None)
@@ -99,30 +100,39 @@ def confus_metrics():
     cm=confusion_matrix(y_true,y_pred)
     print(cm)
 
+def removing_outliers(col):
+    cod=pd.read_csv("expanded_data.csv")
+    cod["z_gross"]=Z_factor(col)
+    cod=cod[cod["z_gross"].abs()<=3]
+    return cod
+
 if __name__ == "__main__": 
     
     cod=pd.read_csv("expanded_data.csv")
-    X=cod[["Shows"]]
-    Y=cod["Average gross"]
-    model=LinearRegression()
-    model.fit(X,Y)
-    predicted_gross=model.predict(X)
-    mae=mean_squared_error(Y,predicted_gross)
-    mse=mean_squared_error(Y,predicted_gross)
-    rmse=np.sqrt(mse)
-    r2=r2_score(Y,predicted_gross)
+    cod=removing_outliers(cod["Average gross"])
+    
+    print(cod)
+    # X=cod[["Shows"]]
+    # Y=cod["Average gross"]
+    # model=LinearRegression()
+    # model.fit(X,Y)
+    # predicted_gross=model.predict(X)
+    # mae=mean_squared_error(Y,predicted_gross)
+    # mse=mean_squared_error(Y,predicted_gross)
+    # rmse=np.sqrt(mse)
+    # r2=r2_score(Y,predicted_gross)
 
-    print("MAE:",round(mae,2))
-    print("MSE:",round(mse,2))
-    print("RMSE:",round(rmse,2))
-    print("R2:",round(r2,2))
-    plt.figure(figsize=(10,6))
-    plt.scatter(X,Y,color="blue",label="Actual score")
-    plt.plot(X,predicted_gross,color="red",label="line")
-    plt.grid(True)
-    plt.show()
-    alpha=5+5
-    # #new_pred=model.predict([[400]])
+    # print("MAE:",round(mae,2))
+    # print("MSE:",round(mse,2))
+    # print("RMSE:",round(rmse,2))
+    # print("R2:",round(r2,2))
+    # plt.figure(figsize=(10,6))
+    # plt.scatter(X,Y,color="blue",label="Actual score")
+    # plt.plot(X,predicted_gross,color="red",label="line")
+    # plt.grid(True)
+    # plt.show()
+    # alpha=5+5
+    # # # #new_pred=model.predict([[400]])
     #print("predicted gross :",new_pred)
 
 
