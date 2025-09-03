@@ -100,17 +100,22 @@ def confus_metrics():
     cm=confusion_matrix(y_true,y_pred)
     print(cm)
 
-def removing_outliers(col):
+def removing_outliers():
     cod=pd.read_csv("expanded_data.csv")
-    cod["z_gross"]=Z_factor(col)
-    cod=cod[cod["z_gross"].abs()<=3]
+    # Loop through each numeric column
+    for col in cod.select_dtypes(include=["int64", "float64"]).columns:
+        cod[f"z_{col}"] = Z_factor(cod[col])   # add z-score column
+        cod = cod[cod[f"z_{col}"].abs() <= 3]  # filter rows
+
     return cod
+    # cod["z_gross"]=Z_factor(col)
+    # cod=cod[cod["z_gross"].abs()<=3]
+    # return cod
 
 if __name__ == "__main__": 
     
     cod=pd.read_csv("expanded_data.csv")
-    cod=removing_outliers(cod["Average gross"])
-    
+    cod=removing_outliers()
     print(cod)
     # X=cod[["Shows"]]
     # Y=cod["Average gross"]
