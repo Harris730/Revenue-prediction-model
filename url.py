@@ -42,40 +42,48 @@ def Z_factor(col):
     deviation=(col-mean_x)**2
     Standard=(deviation.sum()/len(col))**0.5 #standard deviation
     z_factor=(col-mean_x)/Standard #zfactor
-    print("zfactor : \n",z_factor)
+    #print("zfactor : \n",z_factor)
     return z_factor
    # minmax= (col-col.min())/(col.max()-col.min())
   #print("Minmax :",minmax)
   
-def scaling():
- # pd.set_option("display.max_columns", None)
-  cod=pd.read_csv("expanded_data.csv") 
-  # cod={
-  #   'hours':[1,2,3,4,5],
-  #   'score':[40,50,60,70,80]
-  #  }
+def scaling(df):
   df = pd.DataFrame(cod)
 # Standard Scaler
   stanscaler = StandardScaler()
-  s_scaler = stanscaler.fit_transform(df[["Shows","Average gross"]])
-  print(pd.DataFrame(s_scaler, columns=["Shows","Average gross"]))
-# Min-Max Scaler
-  minscaler = MinMaxScaler()
-  m_scaler = minscaler.fit_transform(df[["Shows","Average gross"]])
-  print(pd.DataFrame(m_scaler, columns=["Shows","Average gross"]))
-
+  df["Shows"] = stanscaler.fit_transform(df[["Shows"]])
   X = df[["Shows"]]         
-  y = df[["Average gross"]]    
-  x_train, x_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42)
-  print("x_train:\n", x_train)
-  print("x_test:\n", x_test)
-  print("y_train:\n", y_train)
-  print("y_test:\n", y_test)
+  y = df["Average gross"]    
+  x_train, x_test, y_train, y_test = train_test_split( X, y, test_size=0.8, random_state=42)
+  model=LinearRegression()
+  model.fit(x_train,y_train)
+  #print(predicted_gross)
+  y_pred=model.predict(x_test)
 
-def regression():
-  
-    cod=pd.read_csv("cleaned_data.csv") 
-   # print(cod[["Average gross","Shows"]])
+  mae=mean_squared_error(y_test,y_pred)
+  print("MAE:",round(mae,2))
+  r2=r2_score(y_test,y_pred)
+  print("R2:",round(r2,2))
+
+  # alpha=int(input("Enter shows :"))
+  # alpha_scaled = stanscaler.transform([[alpha]])
+  # predic=model.predict(alpha_scaled)
+  # print("Averge gross is :",round(predic[0],2))
+
+  plt.scatter(x_test, y_test, color="blue", label="Actual")
+  plt.plot(x_test, y_pred, color="red", linewidth=2, label="Predicted Line")
+  plt.xlabel("Shows")
+  plt.ylabel("Average gross")
+  plt.title("Linear Regression Fit")
+  plt.legend()
+  plt.show()
+    # predicted_gross=model.predict(X)
+  # print("x_train:\n", x_train)
+  # print("x_test:\n", x_test)
+  # print("y_train:\n", y_train)
+  # print("y_test:\n", y_test)
+
+def regression(cod):
     model = LinearRegression()
     Y=cod[["Shows"]]
     X=cod["Average gross"]
@@ -84,10 +92,9 @@ def regression():
     predict_gross= model.predict([[show]])
     print(f"You enter {show} so your Gross will be {predict_gross}")
    
-def visualization():
-    cod=pd.read_csv("cleaned_data.csv")
-    Y=cod["Shows"]
-    X=cod["Average gross"]
+def visualization(df):
+    Y=df["Shows"]
+    X=df["Average gross"]
     plt.scatter(X, Y, color="blue", marker="o")
     plt.xlabel("Shows")
     plt.ylabel("Average Gross")
@@ -100,8 +107,7 @@ def confus_metrics():
     cm=confusion_matrix(y_true,y_pred)
     print(cm)
 
-def removing_outliers(thresh):
-    cod=pd.read_csv("expanded_data.csv")
+def removing_outliers(thresh,cod):
     # Loop through each numeric column
     for col in cod.select_dtypes(include=["int64", "float64"]).columns:
         cod[f"z_{col}"] = Z_factor(cod[col])   # add z-score column
@@ -114,11 +120,11 @@ def removing_outliers(thresh):
 
 if __name__ == "__main__": 
     
-    # cod=pd.read_csv("expanded_data.csv")
-    # threshold=2.5
-    # cod=removing_outliers(threshold)
-    # print(cod)
-    scaling()
+    cod=pd.read_csv("expanded_data.csv")
+    threshold=2.5
+    cod=removing_outliers(threshold,cod)
+    #print(cod)
+    scaling(cod)
     # X=cod[["Shows"]]
     # Y=cod["Average gross"]
     # model=LinearRegression()
