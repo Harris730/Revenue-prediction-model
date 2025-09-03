@@ -48,8 +48,8 @@ def Z_factor(col):
   #print("Minmax :",minmax)
   
 def scaling():
-  pd.set_option("display.max_columns", None)
-  cod=pd.read_csv("cleaned_data.csv") 
+ # pd.set_option("display.max_columns", None)
+  cod=pd.read_csv("expanded_data.csv") 
   # cod={
   #   'hours':[1,2,3,4,5],
   #   'score':[40,50,60,70,80]
@@ -57,15 +57,15 @@ def scaling():
   df = pd.DataFrame(cod)
 # Standard Scaler
   stanscaler = StandardScaler()
-  s_scaler = stanscaler.fit_transform(df[["Peak","Ref."]])
-  print(pd.DataFrame(s_scaler, columns=["Peak","Ref."]))
+  s_scaler = stanscaler.fit_transform(df[["Shows","Average gross"]])
+  print(pd.DataFrame(s_scaler, columns=["Shows","Average gross"]))
 # Min-Max Scaler
   minscaler = MinMaxScaler()
-  m_scaler = minscaler.fit_transform(df[["Peak","Ref."]])
-  print(pd.DataFrame(m_scaler, columns=["Peak","Ref."]))
+  m_scaler = minscaler.fit_transform(df[["Shows","Average gross"]])
+  print(pd.DataFrame(m_scaler, columns=["Shows","Average gross"]))
 
-  X = df[["Peak"]]         
-  y = df[["Ref."]]    
+  X = df[["Shows"]]         
+  y = df[["Average gross"]]    
   x_train, x_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42)
   print("x_train:\n", x_train)
   print("x_test:\n", x_test)
@@ -100,12 +100,12 @@ def confus_metrics():
     cm=confusion_matrix(y_true,y_pred)
     print(cm)
 
-def removing_outliers():
+def removing_outliers(thresh):
     cod=pd.read_csv("expanded_data.csv")
     # Loop through each numeric column
     for col in cod.select_dtypes(include=["int64", "float64"]).columns:
         cod[f"z_{col}"] = Z_factor(cod[col])   # add z-score column
-        cod = cod[cod[f"z_{col}"].abs() <= 3]  # filter rows
+        cod = cod[cod[f"z_{col}"].abs() <= thresh]  # filter rows
 
     return cod
     # cod["z_gross"]=Z_factor(col)
@@ -114,9 +114,11 @@ def removing_outliers():
 
 if __name__ == "__main__": 
     
-    cod=pd.read_csv("expanded_data.csv")
-    cod=removing_outliers()
-    print(cod)
+    # cod=pd.read_csv("expanded_data.csv")
+    # threshold=2.5
+    # cod=removing_outliers(threshold)
+    # print(cod)
+    scaling()
     # X=cod[["Shows"]]
     # Y=cod["Average gross"]
     # model=LinearRegression()
@@ -135,8 +137,8 @@ if __name__ == "__main__":
     # plt.scatter(X,Y,color="blue",label="Actual score")
     # plt.plot(X,predicted_gross,color="red",label="line")
     # plt.grid(True)
-    # plt.show()
-    # alpha=5+5
+    #plt.show()
+    alpha=5+5
     # # # #new_pred=model.predict([[400]])
     #print("predicted gross :",new_pred)
 
